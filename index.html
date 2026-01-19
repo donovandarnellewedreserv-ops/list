@@ -3,223 +3,167 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Invitation — Darnelle & Donovan</title>
+  <title>Accès invités — Darnelle & Donovan</title>
   <style>
     :root{
-      --bg:#fbf6f0;
       --accent:#b37c00;
       --muted:#7a6b5f;
-      --card-bg: #fffaf6;
+      --card-bg:#fffaf6;
       --maxw:900px;
     }
-    html,body{height:100%;margin:0;font-family: "Georgia", "Times New Roman", serif;background:linear-gradient(180deg,#ffffff 0%, #fbfbfb 60%);color:#6a563f}
+    html,body{height:100%;margin:0;font-family:"Georgia","Times New Roman",serif;background:linear-gradient(180deg,#fff 0%, #fbfbfb 60%);color:#6a563f}
     .wrap{max-width:var(--maxw);margin:36px auto;padding:20px;}
-    .card{background:var(--card-bg);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.08);padding:28px; border:1px solid rgba(180,140,90,0.12)}
-    h1.title{font-family: "Palace Script","Times New Roman",serif;font-size:44px;color:var(--accent);text-align:center;margin:6px 0 18px}
+    .card{background:var(--card-bg);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.08);padding:28px;border:1px solid rgba(180,140,90,0.12)}
+    h1{font-family:"Palace Script","Times New Roman",serif;font-size:44px;color:var(--accent);text-align:center;margin:6px 0 18px}
+    p{line-height:1.6}
     .center{text-align:center}
     label{display:block;margin:8px 0 4px;font-weight:600;color:var(--muted)}
-    input[type="text"]{width:100%;padding:10px;border-radius:6px;border:1px solid #e5d8c9;font-size:16px;box-sizing:border-box}
-    button{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:12px}
+    input{width:100%;padding:10px;border-radius:8px;border:1px solid #e5d8c9;font-size:16px;box-sizing:border-box}
+    button{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer;margin-top:12px}
     button.secondary{background:#e9dfd4;color:#6a563f}
+    .message{padding:12px;border-radius:10px;margin-top:12px}
+    .ok{background:#eaf5ea;color:#2f6f33}
+    .no{background:#fdecea;color:#8a2b2b}
     .hidden{display:none}
-    .message{padding:12px;border-radius:8px;margin-top:12px}
-    .msg-ok{background:#eaf5ea;color:#2f6f33}
-    .msg-no{background:#fdecea;color:#8a2b2b}
-
-    /* sections */
     .stage{display:none}
     .stage.active{display:block}
-
-    /* image protection */
-    .image-protect{position:relative;display:inline-block;width:100%}
-    .image-protect img{
-      display:block;
-      max-width:100%;
-      width:100%;
-      height:auto;
-      border-radius:8px;
-      user-select:none;
-      -webkit-user-drag:none;
-      pointer-events:auto;
+    a.driveBtn{
+      display:inline-block;
+      text-decoration:none;
+      background:var(--accent);
+      color:#fff;
+      padding:12px 18px;
+      border-radius:12px;
+      font-weight:800;
+      margin-top:12px;
     }
-    .image-protect .overlay{position:absolute;inset:0;background:transparent}
-
-    .imgWrap{max-width:760px;margin:14px auto}
-    .imgHint{margin-top:10px;color:#7a6657;font-style:italic}
-
-    footer.note{margin-top:18px;font-size:13px;color:#9a8570;text-align:center}
-
-    @media (min-width:880px){
-      .wrap{padding:36px}
+    .note{font-size:13px;color:#9a8570;margin-top:14px}
+    .warnBox{
+      margin-top:12px;
+      padding:12px;
+      border-radius:10px;
+      background:#fff6e6;
+      border:1px solid rgba(179,124,0,.25);
+      color:#6a563f;
     }
+    .warnBox ul{margin:8px 0 0; padding-left:18px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card" id="mainCard">
-      <h1 class="title">Darnelle & Donovan</h1>
+    <div class="card">
+      <h1>Darnelle & Donovan</h1>
 
-      <!-- Stage 1: Entrer le nom -->
+      <!-- STAGE 1 -->
       <section id="stage-1" class="stage active">
-        <p class="center" style="margin:0 0 10px;color:#6a563f;font-size:18px;line-height:1.6">
-          Veuillez entrer votre nom complet pour vérifier votre accès :
-        </p>
+        <p class="center">Entrez votre <strong>nom complet</strong> pour accéder aux informations du mariage.</p>
         <label for="fullname">Nom complet</label>
-        <input id="fullname" type="text" autocomplete="off" />
-        <div style="display:flex;gap:12px;align-items:center;">
-          <button id="checkBtn">Vérifier</button>
+        <input id="fullname" type="text" autocomplete="off" placeholder="Ex: Isaac Admeus" />
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button id="checkBtn">Valider</button>
           <button id="resetBtn" class="secondary">Effacer</button>
         </div>
         <div id="status" class="hidden message"></div>
+        <div class="note">
+          Astuce : l’orthographe doit correspondre. (Majuscules/minuscules ne comptent pas.)
+        </div>
       </section>
 
-      <!-- Stage 2: Félicitations + bouton Continuer -->
+      <!-- STAGE 2 -->
       <section id="stage-2" class="stage">
-        <div id="congrats" class="message msg-ok">
-          <strong>Félicitations !</strong>
-          <p id="congratsName" style="margin:6px 0 0"></p>
-          <p style="margin:6px 0 0">Vous faites partie des invité·e·s du mariage de Donovan et Darnelle.</p>
-        </div>
-        <div style="text-align:center;margin-top:12px;">
-          <button id="toInvite">Continuer</button>
-        </div>
-      </section>
-
-      <!-- Stage 3: Image 1 = Carte d'invitation -->
-      <section id="stage-3" class="stage center">
-        <p style="margin:0 0 10px;color:#6a563f;font-size:18px;line-height:1.6">
-          Carte d’invitation :
-        </p>
-
-        <div class="image-protect imgWrap">
-          <img id="inviteImg" src="assets/carte%20invitation.png" alt="Carte d'invitation" draggable="false" />
-          <div class="overlay" title="Image protégée (clic droit désactivé)"></div>
+        <div class="message ok">
+          <strong>Accès autorisé ✅</strong>
+          <p id="welcome" style="margin:8px 0 0"></p>
         </div>
 
-        <div style="text-align:center;margin-top:12px;">
-          <button id="toDress">Continuer</button>
-        </div>
-      </section>
-
-      <!-- Stage 4: Image 2 = Dress code -->
-      <section id="stage-4" class="stage center">
-        <p style="margin:0 0 10px;color:#6a563f;font-size:18px;line-height:1.6">
-          Dress code :
-        </p>
-
-        <div class="image-protect imgWrap">
-          <img id="dressImg" src="assets/dress%20code.png" alt="Dress code — palette de couleurs" draggable="false" />
-          <div class="overlay" title="Image protégée (clic droit désactivé)"></div>
+        <div class="warnBox">
+          <strong>Avant d’ouvrir le dossier, veuillez bien lire :</strong>
+          <ul>
+            <li>Les informations sur <strong>le lieu et la date</strong> de la cérémonie.</li>
+            <li>Le <strong>dress code</strong>.</li>
+            <li>La <strong>note de confirmation</strong> (numéro/consignes pour confirmer votre présence).</li>
+          </ul>
+          <div style="margin-top:8px">
+            Merci de lire attentivement toutes les informations.
+          </div>
         </div>
 
-        <div style="text-align:center;">
-          <button id="toRsvpCard">Continuer</button>
+        <div class="center">
+          <a id="driveLink" class="driveBtn"
+             href="https://drive.google.com/drive/folders/1FM5cdniqUtGn6-FgL7kI8PR81YIj6DPK?usp=sharing"
+             target="_blank" rel="noopener noreferrer">
+            Ouvrir le dossier Drive
+          </a>
+          <div style="margin-top:10px">
+            <button id="backBtn" class="secondary">Retour</button>
+          </div>
+        </div>
+
+        <div class="note center">
+          Remarque : l’accès réel au contenu dépend des réglages de partage Google Drive.
         </div>
       </section>
-
-      <!-- Stage 5: Image 3 = Carte RSVP (avec numéro téléphone) -->
-      <section id="stage-5" class="stage center">
-        <p style="margin:0 0 10px;color:#6a563f;font-size:18px;line-height:1.6">
-          Confirmation de présence (RSVP) :
-        </p>
-
-        <div class="image-protect imgWrap">
-          <img id="rsvpCardImg" src="assets/confirmation%20reservation.png" alt="Carte RSVP — numéro de téléphone" draggable="false" />
-          <div class="overlay" title="Image protégée (clic droit désactivé)"></div>
-        </div>
-
-        <footer class="note">Merci — Donovan & Darnelle</footer>
-      </section>
-
     </div>
   </div>
 
   <script>
-    // UTIL : Normalisation du nom (trim, collapse spaces, lowercase, retirer accents)
     function normalizeName(s){
       if(!s) return '';
       const t = s.trim().replace(/\s+/g,' ').toLowerCase();
       return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
-    // Liste INLINE — pour l'instant uniquement Isaac Admeus
+    // Liste actuelle (tu la mettras à jour plus tard)
     const allowedNamesRaw = [
       "Isaac Admeus"
     ];
     const allowedSet = new Set(allowedNamesRaw.map(n => normalizeName(n)));
 
-    // helper DOM
-    const el = id=>document.getElementById(id);
-    const stages = ['stage-1','stage-2','stage-3','stage-4','stage-5'];
-    function showStage(name){
-      stages.forEach(s=>el(s).classList.toggle('active', s===name));
-      window.scrollTo({top:0,behavior:'smooth'});
+    const el = id => document.getElementById(id);
+    const stages = ["stage-1","stage-2"];
+    function showStage(id){
+      stages.forEach(s => el(s).classList.toggle("active", s === id));
+      window.scrollTo({top:0,behavior:"smooth"});
     }
 
-    // éléments
-    const fullname = el('fullname');
-    const checkBtn = el('checkBtn');
-    const resetBtn = el('resetBtn');
-    const status = el('status');
-    const congratsName = el('congratsName');
-    const toInvite = el('toInvite');
-    const toDress = el('toDress');
-    const toRsvpCard = el('toRsvpCard');
+    const fullname = el("fullname");
+    const checkBtn = el("checkBtn");
+    const resetBtn = el("resetBtn");
+    const status = el("status");
+    const welcome = el("welcome");
+    const backBtn = el("backBtn");
 
     function checkName(){
-      const v = fullname.value || '';
-      const norm = normalizeName(v);
-      if(!norm){
-        status.className = 'message msg-no';
-        status.textContent = 'Veuillez entrer votre nom complet.';
-        status.classList.remove('hidden');
+      const v = fullname.value || "";
+      const n = normalizeName(v);
+
+      if(!n){
+        status.className = "message no";
+        status.textContent = "Veuillez entrer votre nom complet.";
+        status.classList.remove("hidden");
         return;
       }
-      const found = allowedSet.has(norm);
-      if(found){
-        status.classList.add('hidden');
-        congratsName.textContent = v;
-        showStage('stage-2');
+
+      if(allowedSet.has(n)){
+        status.classList.add("hidden");
+        welcome.textContent = `Bienvenue ${v.trim()} !`;
+        showStage("stage-2");
       } else {
-        status.className = 'message msg-no';
-        status.textContent = `Désolé, "${v}" ne figure pas sur la liste des invité·e·s.`;
-        status.classList.remove('hidden');
+        status.className = "message no";
+        status.textContent = `Désolé, "${v}" n'est pas sur la liste des invité·e·s.`;
+        status.classList.remove("hidden");
       }
     }
 
-    checkBtn.addEventListener('click', checkName);
-    resetBtn.addEventListener('click', ()=>{ fullname.value=''; status.classList.add('hidden'); fullname.focus(); });
-    fullname.addEventListener('keydown', (e)=>{ if(e.key==='Enter') checkBtn.click() });
+    checkBtn.addEventListener("click", checkName);
+    fullname.addEventListener("keydown", (e)=>{ if(e.key==="Enter") checkName(); });
+    resetBtn.addEventListener("click", ()=>{ fullname.value=""; status.classList.add("hidden"); fullname.focus(); });
+    backBtn.addEventListener("click", ()=> showStage("stage-1"));
 
-    toInvite.addEventListener('click', ()=> showStage('stage-3'));
-    toDress.addEventListener('click', ()=> showStage('stage-4'));
-    toRsvpCard.addEventListener('click', ()=> showStage('stage-5'));
-
-    // protections (dissuasion)
-    document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-    document.addEventListener('keydown', function(e){
-      if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) e.preventDefault();
-      if((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) e.preventDefault();
-    });
-    document.addEventListener('dragstart', function(e){ if(e.target && e.target.tagName === 'IMG') e.preventDefault(); });
-
-    // Message si une image manque
-    function addMissingImageHandler(imgId, expectedPath){
-      const img = el(imgId);
-      if(!img) return;
-      img.addEventListener('error', ()=> {
-        img.style.display = 'none';
-        const p = document.createElement('p');
-        p.className = 'imgHint';
-        p.textContent = `Image introuvable : "${expectedPath}". Vérifie le dossier /assets et le nom du fichier.`;
-        img.parentElement.appendChild(p);
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', ()=>{
-      addMissingImageHandler('inviteImg', 'assets/carte invitation.png');
-      addMissingImageHandler('dressImg', 'assets/dress code.png');
-      addMissingImageHandler('rsvpCardImg', 'assets/confirmation reservation.png');
+    // Dissuasion basique (ne bloque pas à 100%)
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("keydown", (e)=>{
+      if((e.ctrlKey || e.metaKey) && (e.key==="s"||e.key==="S"||e.key==="p"||e.key==="P")) e.preventDefault();
     });
   </script>
 </body>
