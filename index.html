@@ -25,21 +25,30 @@
     .message{padding:12px;border-radius:8px;margin-top:12px}
     .msg-ok{background:#eaf5ea;color:#2f6f33}
     .msg-no{background:#fdecea;color:#8a2b2b}
+
     /* sections */
     .stage{display:none}
     .stage.active{display:block}
-    /* invitation card styling (simple) */
-    .invite-card{padding:20px;border-radius:10px;border:1px solid rgba(160,130,80,0.12);background:#fffefb}
-    .invite-names{font-family: "Palace Script", "Georgia", serif;font-size:40px;color:var(--accent);text-align:center;margin:10px 0}
-    .invite-text{color:#6a563f;text-align:center;font-size:18px;line-height:1.6}
+
     /* image protection */
-    .image-protect{position:relative;display:inline-block}
-    .image-protect img{display:block;max-width:100%;height:auto;border-radius:8px;user-select:none;-webkit-user-drag:none}
+    .image-protect{position:relative;display:inline-block;width:100%}
+    .image-protect img{
+      display:block;
+      max-width:100%;
+      width:100%;
+      height:auto;
+      border-radius:8px;
+      user-select:none;
+      -webkit-user-drag:none;
+      pointer-events:auto;
+    }
     .image-protect .overlay{position:absolute;inset:0;background:transparent}
-    /* RSVP area */
-    .rsvp{padding:14px;background:#fff;border-radius:8px;margin-top:12px}
-    .small{font-size:14px;color:#6a563f}
+
+    .imgWrap{max-width:760px;margin:14px auto}
+    .imgHint{margin-top:10px;color:#7a6657;font-style:italic}
+
     footer.note{margin-top:18px;font-size:13px;color:#9a8570;text-align:center}
+
     @media (min-width:880px){
       .wrap{padding:36px}
     }
@@ -52,7 +61,9 @@
 
       <!-- Stage 1: Entrer le nom -->
       <section id="stage-1" class="stage active">
-        <p class="center invite-text">Veuillez entrer votre nom complet pour vérifier votre accès :</p>
+        <p class="center" style="margin:0 0 10px;color:#6a563f;font-size:18px;line-height:1.6">
+          Veuillez entrer votre nom complet pour vérifier votre accès :
+        </p>
         <label for="fullname">Nom complet</label>
         <input id="fullname" type="text" autocomplete="off" />
         <div style="display:flex;gap:12px;align-items:center;">
@@ -74,14 +85,15 @@
         </div>
       </section>
 
-      <!-- Stage 3: Invitation visible -->
-      <section id="stage-3" class="stage">
-        <div class="invite-card">
-          <div class="invite-text">Dans le silence d'une prière et la douceur d'une promesse,<br> deux cœurs ont choisi de ne faire qu'un.</div>
-          <div class="invite-names">Darnelle & Donovan</div>
-          <div class="invite-text">
-            <div>Le dimanche 29 Mars 2026, à l'Église Adventiste Philadelphie, Laboule 15 à 11h am.</div>
-          </div>
+      <!-- Stage 3: Image 1 = Carte d'invitation -->
+      <section id="stage-3" class="stage center">
+        <p style="margin:0 0 10px;color:#6a563f;font-size:18px;line-height:1.6">
+          Carte d’invitation :
+        </p>
+
+        <div class="image-protect imgWrap">
+          <img id="inviteImg" src="assets/carte%20invitation.png" alt="Carte d'invitation" draggable="false" />
+          <div class="overlay" title="Image protégée (clic droit désactivé)"></div>
         </div>
 
         <div style="text-align:center;margin-top:12px;">
@@ -89,34 +101,31 @@
         </div>
       </section>
 
-      <!-- Stage 4: Dress code image (non téléchargeable) -->
+      <!-- Stage 4: Image 2 = Dress code -->
       <section id="stage-4" class="stage center">
-        <p class="invite-text">Merci de respecter le dresscode printanier conseillé :</p>
+        <p style="margin:0 0 10px;color:#6a563f;font-size:18px;line-height:1.6">
+          Dress code :
+        </p>
 
-        <div class="image-protect" style="max-width:640px;margin:14px auto;">
-          <!-- Remplace src par ton image dans /assets/dresscode.jpg -->
-          <img id="dressImg" src="assets/dresscode.jpg" alt="Dress code — palette de couleurs" />
+        <div class="image-protect imgWrap">
+          <img id="dressImg" src="assets/dress%20code.png" alt="Dress code — palette de couleurs" draggable="false" />
           <div class="overlay" title="Image protégée (clic droit désactivé)"></div>
         </div>
 
         <div style="text-align:center;">
-          <button id="toRsvp">Continuer</button>
+          <button id="toRsvpCard">Continuer</button>
         </div>
       </section>
 
-      <!-- Stage 5: Carte RSVP (confirmation) -->
-      <section id="stage-5" class="stage">
-        <div class="rsvp">
-          <h3 style="margin-top:0;color:var(--accent);font-family: 'Palace Script', serif">Confirmation de présence</h3>
-          <p class="small">Merci de confirmer votre présence avant le 14 Mars 2026.</p>
-          <div style="margin-top:8px;">
-            <label for="attend" class="small">Je serai présent·e :</label>
-            <div style="display:flex;gap:10px;margin-top:8px;">
-              <button id="btnYes">Oui, je confirme</button>
-              <button id="btnNo" class="secondary">Non, je ne pourrai pas venir</button>
-            </div>
-          </div>
-          <div id="rsvpResult" class="message hidden" style="margin-top:12px"></div>
+      <!-- Stage 5: Image 3 = Carte RSVP (avec numéro téléphone) -->
+      <section id="stage-5" class="stage center">
+        <p style="margin:0 0 10px;color:#6a563f;font-size:18px;line-height:1.6">
+          Confirmation de présence (RSVP) :
+        </p>
+
+        <div class="image-protect imgWrap">
+          <img id="rsvpCardImg" src="assets/confirmation%20reservation.png" alt="Carte RSVP — numéro de téléphone" draggable="false" />
+          <div class="overlay" title="Image protégée (clic droit désactivé)"></div>
         </div>
 
         <footer class="note">Merci — Donovan & Darnelle</footer>
@@ -155,12 +164,8 @@
     const congratsName = el('congratsName');
     const toInvite = el('toInvite');
     const toDress = el('toDress');
-    const toRsvp = el('toRsvp');
-    const btnYes = el('btnYes');
-    const btnNo = el('btnNo');
-    const rsvpResult = el('rsvpResult');
+    const toRsvpCard = el('toRsvpCard');
 
-    // Vérification (fonctionne même en file://)
     function checkName(){
       const v = fullname.value || '';
       const norm = normalizeName(v);
@@ -182,28 +187,15 @@
       }
     }
 
-    // handlers
     checkBtn.addEventListener('click', checkName);
     resetBtn.addEventListener('click', ()=>{ fullname.value=''; status.classList.add('hidden'); fullname.focus(); });
     fullname.addEventListener('keydown', (e)=>{ if(e.key==='Enter') checkBtn.click() });
 
     toInvite.addEventListener('click', ()=> showStage('stage-3'));
     toDress.addEventListener('click', ()=> showStage('stage-4'));
-    toRsvp.addEventListener('click', ()=> showStage('stage-5'));
+    toRsvpCard.addEventListener('click', ()=> showStage('stage-5'));
 
-    // RSVP handling (simple UI)
-    btnYes.addEventListener('click', ()=>{
-      rsvpResult.className = 'message msg-ok';
-      rsvpResult.textContent = 'Merci — votre présence a bien été enregistrée (localement).';
-      rsvpResult.classList.remove('hidden');
-    });
-    btnNo.addEventListener('click', ()=>{
-      rsvpResult.className = 'message msg-no';
-      rsvpResult.textContent = 'Merci de nous avoir prévenu.';
-      rsvpResult.classList.remove('hidden');
-    });
-
-    // protections images / sauvegarde (basique)
+    // protections (dissuasion)
     document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
     document.addEventListener('keydown', function(e){
       if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) e.preventDefault();
@@ -211,19 +203,23 @@
     });
     document.addEventListener('dragstart', function(e){ if(e.target && e.target.tagName === 'IMG') e.preventDefault(); });
 
+    // Message si une image manque
+    function addMissingImageHandler(imgId, expectedPath){
+      const img = el(imgId);
+      if(!img) return;
+      img.addEventListener('error', ()=> {
+        img.style.display = 'none';
+        const p = document.createElement('p');
+        p.className = 'imgHint';
+        p.textContent = `Image introuvable : "${expectedPath}". Vérifie le dossier /assets et le nom du fichier.`;
+        img.parentElement.appendChild(p);
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', ()=>{
-      const dressImg = el('dressImg');
-      if(dressImg){
-        dressImg.addEventListener('error', ()=> {
-          dressImg.style.display = 'none';
-          const p = document.createElement('p');
-          p.textContent = 'Image du dresscode introuvable. Ajoutez "assets/dresscode.jpg" dans le dépôt pour l\'afficher.';
-          p.style.color = '#7a6657';
-          p.style.fontStyle = 'italic';
-          p.style.marginTop = '10px';
-          dressImg.parentElement.appendChild(p);
-        });
-      }
+      addMissingImageHandler('inviteImg', 'assets/carte invitation.png');
+      addMissingImageHandler('dressImg', 'assets/dress code.png');
+      addMissingImageHandler('rsvpCardImg', 'assets/confirmation reservation.png');
     });
   </script>
 </body>
