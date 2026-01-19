@@ -52,9 +52,9 @@
 
       <!-- Stage 1: Entrer le nom -->
       <section id="stage-1" class="stage active">
-        <p class="center invite-text">Veuillez entrer votre nom complet pour vérifier si vous êtes invité·e :</p>
+        <p class="center invite-text">Veuillez entrer votre nom complet pour vérifier votre accès :</p>
         <label for="fullname">Nom complet</label>
-        <input id="fullname" type="text" placeholder="Ex. Isaac Admeus" autocomplete="off" />
+        <input id="fullname" type="text" autocomplete="off" />
         <div style="display:flex;gap:12px;align-items:center;">
           <button id="checkBtn">Vérifier</button>
           <button id="resetBtn" class="secondary">Effacer</button>
@@ -203,7 +203,7 @@
         showStage('stage-2');
       } else {
         status.className = 'message msg-no';
-        status.textContent = `Désolé, "${v}" ne figure pas sur la liste des invité·e·s. Si vous pensez que c'est une erreur, contactez les organisateurs.`;
+        status.textContent = `Désolé, "${v}" ne figure pas sur la liste des invité·e·s.`;
         status.classList.remove('hidden');
       }
     }
@@ -225,7 +225,7 @@
     });
     btnNo.addEventListener('click', ()=>{
       rsvpResult.className = 'message msg-no';
-      rsvpResult.textContent = 'Merci de nous avoir prévenu. Nous sommes tristes de vous manquer.';
+      rsvpResult.textContent = 'Merci de nous avoir prévenu.';
       rsvpResult.classList.remove('hidden');
     });
 
