@@ -4,255 +4,96 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Invitation — Darnelle & Donovan</title>
-  <style>
-    :root{
-      --bg:#fbf6f0;
-      --accent:#b37c00;
-      --muted:#7a6b5f;
-      --card-bg: #fffaf6;
-      --maxw:900px;
-    }
-    html,body{height:100%;margin:0;font-family: "Georgia", "Times New Roman", serif;background:linear-gradient(180deg,#ffffff 0%, #fbfbfb 60%);color:#6a563f}
-    .wrap{max-width:var(--maxw);margin:36px auto;padding:20px;}
-    .card{background:var(--card-bg);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.08);padding:28px; border:1px solid rgba(180,140,90,0.12)}
-    h1.title{font-family: "Palace Script","Times New Roman",serif;font-size:44px;color:var(--accent);text-align:center;margin:6px 0 18px}
-    .center{text-align:center}
-    label{display:block;margin:8px 0 4px;font-weight:600;color:var(--muted)}
-    input[type="text"]{width:100%;padding:10px;border-radius:6px;border:1px solid #e5d8c9;font-size:16px;box-sizing:border-box}
-    button{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:12px}
-    button.secondary{background:#e9dfd4;color:#6a563f}
-    .hidden{display:none}
-    .message{padding:12px;border-radius:8px;margin-top:12px}
-    .msg-ok{background:#eaf5ea;color:#2f6f33}
-    .msg-no{background:#fdecea;color:#8a2b2b}
-    /* sections */
-    .stage{display:none}
-    .stage.active{display:block}
-    /* invitation card styling (simple) */
-    .invite-card{padding:20px;border-radius:10px;border:1px solid rgba(160,130,80,0.12);background:#fffefb}
-    .invite-names{font-family: "Palace Script", "Georgia", serif;font-size:40px;color:var(--accent);text-align:center;margin:10px 0}
-    .invite-text{color:#6a563f;text-align:center;font-size:18px;line-height:1.6}
-    /* image protection */
-    .image-protect{position:relative;display:inline-block}
-    .image-protect img{display:block;max-width:100%;height:auto;border-radius:8px;user-select:none;-webkit-user-drag:none}
-    .image-protect .overlay{position:absolute;inset:0;background:transparent}
-    /* RSVP area */
-    .rsvp{padding:14px;background:#fff;border-radius:8px;margin-top:12px}
-    .small{font-size:14px;color:#6a563f}
-    footer.note{margin-top:18px;font-size:13px;color:#9a8570;text-align:center}
-    @media (min-width:880px){
-      .wrap{padding:36px}
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="card" id="mainCard">
-      <h1 class="title">Darnelle & Donovan</h1>
+  <main class="app" aria-live="polite">
+    <header class="topbar">
+      <div class="brand">Darnelle & Donovan</div>
+      <div class="hint">Accès réservé aux invités</div>
+    </header>
 
-      <!-- Stage 1: Entrer le nom -->
-      <section id="stage-1" class="stage active">
-        <p class="center invite-text">Veuillez entrer votre nom complet pour vérifier votre accès :</p>
-        <label for="fullname">Nom complet</label>
-        <input id="fullname" type="text" autocomplete="off" />
-        <div style="display:flex;gap:12px;align-items:center;">
-          <button id="checkBtn">Vérifier</button>
-          <button id="resetBtn" class="secondary">Effacer</button>
-        </div>
-        <div id="status" class="hidden message"></div>
-      </section>
+    <!-- ÉTAPE 0 : Gate par nom -->
+    <section class="card" id="step-0">
+      <h1>Accès</h1>
+      <p class="sub">
+        Veuillez entrer votre <strong>nom complet</strong> exactement comme sur l’invitation.
+      </p>
 
-      <!-- Stage 2: Félicitations + bouton Continuer -->
-      <section id="stage-2" class="stage">
-        <div id="congrats" class="message msg-ok">
-          <strong>Félicitations !</strong>
-          <p id="congratsName" style="margin:6px 0 0"></p>
-          <p style="margin:6px 0 0">Vous faites partie des invité·e·s du mariage de Donovan et Darnelle.</p>
-        </div>
-        <div style="text-align:center;margin-top:12px;">
-          <button id="toInvite">Continuer</button>
-        </div>
-      </section>
+      <label class="label" for="fullName">Nom complet</label>
+      <input id="fullName" class="input" type="text" autocomplete="name" placeholder="Ex : Isaac Admeus" />
 
-      <!-- Stage 3: Invitation visible -->
-      <section id="stage-3" class="stage">
-        <div class="invite-card">
-          <div class="invite-text">Dans le silence d'une prière et la douceur d'une promesse,<br> deux cœurs ont choisi de ne faire qu'un.</div>
-          <div class="invite-names">Darnelle & Donovan</div>
-          <div class="invite-text">
-            <div>Le dimanche 29 Mars 2026, à l'Église Adventiste Philadelphie, Laboule 15 à 11h am.</div>
-          </div>
-        </div>
+      <button id="btnCheck" class="btn primary">Continuer</button>
 
-        <div style="text-align:center;margin-top:12px;">
-          <button id="toDress">Continuer</button>
-        </div>
-      </section>
+      <p id="error" class="error" role="alert" hidden>
+        Nom non reconnu. Accès refusé.
+      </p>
+      <p class="note">
+        Astuce : respectez l’orthographe. (Majuscules/minuscules ne comptent pas.)
+      </p>
+    </section>
 
-      <!-- Stage 4: Dress code image (non téléchargeable) -->
-      <section id="stage-4" class="stage center">
-        <p class="invite-text">Merci de respecter le dresscode printanier conseillé :</p>
+    <!-- ÉTAPE 1 : Message de félicitations -->
+    <section class="card" id="step-1" hidden>
+      <h1>Félicitations 🎉</h1>
+      <p class="sub" id="welcomeText"></p>
+      <p class="sub">
+        Vous faites partie des invités du mariage de <strong>Donovan</strong> et <strong>Darnelle</strong>.
+      </p>
+      <button class="btn primary next" data-next="2">Continuer</button>
+    </section>
 
-        <div class="image-protect" style="max-width:640px;margin:14px auto;">
-          <!-- Remplace src par ton image dans /assets/dresscode.jpg -->
-          <img id="dressImg" src="assets/dresscode.jpg" alt="Dress code — palette de couleurs" />
-          <div class="overlay" title="Image protégée (clic droit désactivé)"></div>
-        </div>
+    <!-- ÉTAPE 2 : Carte d'invitation -->
+    <section class="card wide" id="step-2" hidden>
+      <h1>Carte d’invitation</h1>
+      <div class="imageFrame">
+        <img
+          src="assets/carte invitation.png"
+          alt="Carte d'invitation"
+          class="secureImg"
+          draggable="false"
+        />
+      </div>
+      <button class="btn primary next" data-next="3">Continuer</button>
+    </section>
 
-        <div style="text-align:center;">
-          <button id="toRsvp">Continuer</button>
-        </div>
-      </section>
+    <!-- ÉTAPE 3 : Dress code -->
+    <section class="card wide" id="step-3" hidden>
+      <h1>Dress code</h1>
+      <div class="imageFrame">
+        <img
+          src="assets/dress code.png"
+          alt="Dress code"
+          class="secureImg"
+          draggable="false"
+        />
+      </div>
+      <button class="btn primary next" data-next="4">Continuer</button>
+    </section>
 
-      <!-- Stage 5: Carte RSVP (confirmation) -->
-      <section id="stage-5" class="stage">
-        <div class="rsvp">
-          <h3 style="margin-top:0;color:var(--accent);font-family: 'Palace Script', serif">Confirmation de présence</h3>
-          <p class="small">Merci de confirmer votre présence avant le 14 Mars 2026.</p>
-          <div style="margin-top:8px;">
-            <label for="attend" class="small">Je serai présent·e :</label>
-            <div style="display:flex;gap:10px;margin-top:8px;">
-              <button id="btnYes">Oui, je confirme</button>
-              <button id="btnNo" class="secondary">Non, je ne pourrai pas venir</button>
-            </div>
-          </div>
-          <div id="rsvpResult" class="message hidden" style="margin-top:12px"></div>
-        </div>
+    <!-- ÉTAPE 4 : RSVP -->
+    <section class="card wide" id="step-4" hidden>
+      <h1>Confirmation (RSVP)</h1>
+      <div class="imageFrame">
+        <img
+          src="assets/confirmation reservation.png"
+          alt="Carte de confirmation RSVP"
+          class="secureImg"
+          draggable="false"
+        />
+      </div>
 
-        <footer class="note">Merci — Donovan & Darnelle</footer>
-      </section>
+      <div class="actionsRow">
+        <button class="btn ghost" id="btnRestart">Recommencer</button>
+      </div>
+    </section>
 
-    </div>
-  </div>
+    <footer class="footer">
+      <small>© Darnelle & Donovan — Accès invité</small>
+    </footer>
+  </main>
 
-  <script>
-    // UTIL : Normalisation du nom (trim, collapse spaces, lowercase, retirer accents)
-    function normalizeName(s){
-      if(!s) return '';
-      // trim + collapse multiple spaces into one, then lowercase
-      const t = s.trim().replace(/\s+/g,' ').toLowerCase();
-      // retire les diacritiques (accents) pour une comparaison plus tolérante
-      return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    }
-
-    // Chargement de la liste d'invités (guests.json)
-    let allowedNames = []; // tableau normalisé
-    let allowedSet = new Set(); // Set pour lookup rapide
-
-    async function loadGuests(){
-      try{
-        const r = await fetch('guests.json', {cache: "no-store"});
-        if(!r.ok) throw new Error('Impossible de charger guests.json (status ' + r.status + ')');
-        const data = await r.json();
-        console.log('guests.json chargé:', data);
-        if(Array.isArray(data.guests)){
-          allowedNames = data.guests.map(n => normalizeName(n));
-          allowedSet = new Set(allowedNames);
-          console.log('allowedNames normalisés:', allowedNames);
-        } else {
-          console.warn('Format guests.json inattendu', data);
-        }
-      } catch(e){
-        console.warn('Erreur en chargeant guests.json:', e);
-      }
-    }
-
-    // initial load
-    loadGuests();
-
-    // DOM helper
-    const el = id=>document.getElementById(id);
-    const stages = ['stage-1','stage-2','stage-3','stage-4','stage-5'];
-    function showStage(name){
-      stages.forEach(s=>el(s).classList.toggle('active', s===name));
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-
-    // elements
-    const fullname = el('fullname');
-    const checkBtn = el('checkBtn');
-    const resetBtn = el('resetBtn');
-    const status = el('status');
-    const congratsName = el('congratsName');
-    const toInvite = el('toInvite');
-    const toDress = el('toDress');
-    const toRsvp = el('toRsvp');
-    const btnYes = el('btnYes');
-    const btnNo = el('btnNo');
-    const rsvpResult = el('rsvpResult');
-
-    // Check function
-    function checkName(){
-      const v = fullname.value || '';
-      const norm = normalizeName(v);
-      if(!norm){
-        status.className = 'message msg-no';
-        status.textContent = 'Veuillez entrer votre nom complet.';
-        status.classList.remove('hidden');
-        return;
-      }
-      // reload guests if empty (in case)
-      if(allowedSet.size === 0){
-        loadGuests().then(()=> validate(norm,v));
-      } else {
-        validate(norm,v);
-      }
-    }
-
-    function validate(norm,v){
-      const found = allowedSet.has(norm);
-      if(found){
-        status.classList.add('hidden');
-        congratsName.textContent = v;
-        showStage('stage-2');
-      } else {
-        status.className = 'message msg-no';
-        status.textContent = `Désolé, "${v}" ne figure pas sur la liste des invité·e·s.`;
-        status.classList.remove('hidden');
-      }
-    }
-
-    // Handlers
-    checkBtn.addEventListener('click', checkName);
-    resetBtn.addEventListener('click', ()=>{ fullname.value=''; status.classList.add('hidden'); fullname.focus(); });
-    fullname.addEventListener('keydown', (e)=>{ if(e.key==='Enter') checkBtn.click() });
-
-    toInvite.addEventListener('click', ()=> showStage('stage-3'));
-    toDress.addEventListener('click', ()=> showStage('stage-4'));
-    toRsvp.addEventListener('click', ()=> showStage('stage-5'));
-
-    // RSVP handling (simple UI)
-    btnYes.addEventListener('click', ()=>{
-      rsvpResult.className = 'message msg-ok';
-      rsvpResult.textContent = 'Merci — votre présence a bien été enregistrée (localement).';
-      rsvpResult.classList.remove('hidden');
-    });
-    btnNo.addEventListener('click', ()=>{
-      rsvpResult.className = 'message msg-no';
-      rsvpResult.textContent = 'Merci de nous avoir prévenu.';
-      rsvpResult.classList.remove('hidden');
-    });
-
-    // Protections images / sauvegarde (basique)
-    document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-    document.addEventListener('keydown', function(e){
-      if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) e.preventDefault();
-      if((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) e.preventDefault();
-    });
-    document.addEventListener('dragstart', function(e){ if(e.target && e.target.tagName === 'IMG') e.preventDefault(); });
-
-    document.addEventListener('DOMContentLoaded', ()=>{
-      const dressImg = el('dressImg');
-      dressImg.addEventListener('error', ()=> {
-        dressImg.style.display = 'none';
-        const p = document.createElement('p');
-        p.textContent = 'Image du dresscode introuvable. Ajoutez "assets/dresscode.jpg" dans le dépôt pour l\'afficher.';
-        p.style.color = '#7a6657';
-        p.style.fontStyle = 'italic';
-        p.style.marginTop = '10px';
-        dressImg.parentElement.appendChild(p);
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
