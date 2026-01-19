@@ -126,22 +126,31 @@
   </div>
 
   <script>
-    // UTIL : Normalisation du nom
+    // UTIL : Normalisation du nom (trim, collapse spaces, lowercase, retirer accents)
     function normalizeName(s){
-      return s.trim().replace(/\s+/g, ' ').toLowerCase();
+      if(!s) return '';
+      // trim + collapse multiple spaces into one, then lowercase
+      const t = s.trim().replace(/\s+/g,' ').toLowerCase();
+      // retire les diacritiques (accents) pour une comparaison plus tolérante
+      return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
     // Chargement de la liste d'invités (guests.json)
-    let allowedNames = [];
+    let allowedNames = []; // tableau normalisé
+    let allowedSet = new Set(); // Set pour lookup rapide
+
     async function loadGuests(){
       try{
         const r = await fetch('guests.json', {cache: "no-store"});
-        if(!r.ok) throw new Error('Impossible de charger guests.json');
+        if(!r.ok) throw new Error('Impossible de charger guests.json (status ' + r.status + ')');
         const data = await r.json();
+        console.log('guests.json chargé:', data);
         if(Array.isArray(data.guests)){
           allowedNames = data.guests.map(n => normalizeName(n));
+          allowedSet = new Set(allowedNames);
+          console.log('allowedNames normalisés:', allowedNames);
         } else {
-          console.warn('Format guests.json inattendu');
+          console.warn('Format guests.json inattendu', data);
         }
       } catch(e){
         console.warn('Erreur en chargeant guests.json:', e);
@@ -151,12 +160,11 @@
     // initial load
     loadGuests();
 
-    // DOM
+    // DOM helper
     const el = id=>document.getElementById(id);
     const stages = ['stage-1','stage-2','stage-3','stage-4','stage-5'];
     function showStage(name){
       stages.forEach(s=>el(s).classList.toggle('active', s===name));
-      // Scroll top to card
       window.scrollTo({top:0,behavior:'smooth'});
     }
 
@@ -184,20 +192,16 @@
         return;
       }
       // reload guests if empty (in case)
-      if(allowedNames.length === 0){
-        // small attempt to reload
-        loadGuests().then(()=>{
-          validate(norm,v);
-        });
+      if(allowedSet.size === 0){
+        loadGuests().then(()=> validate(norm,v));
       } else {
         validate(norm,v);
       }
     }
 
     function validate(norm,v){
-      const found = allowedNames.includes(norm);
+      const found = allowedSet.has(norm);
       if(found){
-        // success
         status.classList.add('hidden');
         congratsName.textContent = v;
         showStage('stage-2');
@@ -217,7 +221,7 @@
     toDress.addEventListener('click', ()=> showStage('stage-4'));
     toRsvp.addEventListener('click', ()=> showStage('stage-5'));
 
-    // RSVP handling (simple UI; tu peux modifier pour envoyer au serveur)
+    // RSVP handling (simple UI)
     btnYes.addEventListener('click', ()=>{
       rsvpResult.className = 'message msg-ok';
       rsvpResult.textContent = 'Merci — votre présence a bien été enregistrée (localement).';
@@ -229,26 +233,15 @@
       rsvpResult.classList.remove('hidden');
     });
 
-    // Protection des images côté client (désactivation clic droit, dragstart, ctrl+s)
-    document.addEventListener('contextmenu', function(e){
-      // Empêche le menu contextuel pour toute la page (protection basique)
-      e.preventDefault();
-    });
+    // Protections images / sauvegarde (basique)
+    document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
     document.addEventListener('keydown', function(e){
-      // Bloque Ctrl+S / Cmd+S / Ctrl+P et F12 / Ctrl+Shift+I
-      if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) {
-        e.preventDefault();
-      }
+      if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) e.preventDefault();
       if((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) e.preventDefault();
     });
-    // Empêche drag d'image
-    document.addEventListener('dragstart', function(e){
-      if(e.target && e.target.tagName === 'IMG') e.preventDefault();
-    });
+    document.addEventListener('dragstart', function(e){ if(e.target && e.target.tagName === 'IMG') e.preventDefault(); });
 
-    // Overlay capture prevention: l'overlay couvre l'image ; on empêche aussi le clic droit dessus
     document.addEventListener('DOMContentLoaded', ()=>{
-      // si l'image est manquante, on affiche un texte d'information
       const dressImg = el('dressImg');
       dressImg.addEventListener('error', ()=> {
         dressImg.style.display = 'none';
@@ -260,8 +253,6 @@
         dressImg.parentElement.appendChild(p);
       });
     });
-
-    // Conseils : empêcher l'accès si nom absent — déjà fait.
   </script>
 </body>
 </html>
